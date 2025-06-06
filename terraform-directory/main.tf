@@ -22,8 +22,8 @@ resource "azurerm_management_group" "ims_root" {
   parent_management_group_id = var.root_management_group_id # This is implicitly the tenant root
 }
 # Example usage of the management group resource ID (path):
-output "management_group_resource_id" {
-  value = "/providers/Microsoft.Management/managementGroups/${azurerm_management_group.ims_root.name}"
+output "management_group_id" {
+  value = azurerm_management_group.ims_root.id
 }
 # Tier 1 Groups
 resource "azurerm_management_group" "tier1" {
