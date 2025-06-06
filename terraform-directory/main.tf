@@ -27,5 +27,5 @@ resource "azurerm_management_group" "tier1" {
   for_each = var.child_management_groups
   display_name = each.value
   name         = each.key
-  parent_management_group_id = azurerm_management_group.parent.id
+  parent_management_group_id = azurerm_management_group.ims_root.id
 }
