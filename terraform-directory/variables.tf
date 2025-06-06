@@ -1,7 +1,7 @@
 variable "root_management_group_id" {
   description = "The ID of the root management group (usually your tenant ID or 'root')."
   type        = string
-  default     = "/providers/Microsoft.Management/managementGroups/root" # Replace with your actual root management group ID
+  default     = "/providers/Microsoft.Management/managementGroups/1a4d2aaa-669c-4d02-a275-bd3716545470" # Replace with your actual root management group ID
 }
 
 variable "parent_management_group_name" {
