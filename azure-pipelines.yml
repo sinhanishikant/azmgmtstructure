@@ -1,0 +1,80 @@
+parameters:
+  - name: action
+    displayName: Action
+    type: string
+    default: create
+    values:
+      - create
+      - delete
+
+trigger:
+  - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  - group: variablegroup
+
+jobs:
+- job: Create
+  displayName: 'Create Resources'
+  condition: eq('${{ parameters.action }}', 'create')
+  steps:
+    - script: |
+        sudo apt-get update
+        sudo apt-get install -y wget unzip
+        wget https://releases.hashicorp.com/terraform/1.7.5/terraform_1.7.5_linux_amd64.zip
+        unzip terraform_1.7.5_linux_amd64.zip
+        sudo mv terraform /usr/local/bin/
+        terraform version
+      displayName: 'Install Terraform'
+
+    - script: terraform init
+      displayName: 'Terraform Init'
+      workingDirectory: terraform-directory
+      env:
+        ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+        ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+        ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+        ARM_TENANT_ID: $(ARM_TENANT_ID)
+
+    - script: terraform apply -auto-approve -var "admin_password=$(admin_password)"
+      displayName: 'Terraform Apply'
+      workingDirectory: terraform-directory
+      env:
+        ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+        ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+        ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+        ARM_TENANT_ID: $(ARM_TENANT_ID)
+
+- job: Delete
+  displayName: 'Delete Resources'
+  condition: eq('${{ parameters.action }}', 'delete')
+  steps:
+    - script: |
+        sudo apt-get update
+        sudo apt-get install -y wget unzip
+        wget https://releases.hashicorp.com/terraform/1.7.5/terraform_1.7.5_linux_amd64.zip
+        unzip terraform_1.7.5_linux_amd64.zip
+        sudo mv terraform /usr/local/bin/
+        terraform version
+      displayName: 'Install Terraform'
+
+    - script: terraform init
+      displayName: 'Terraform Init'
+      workingDirectory: terraform-directory
+      env:
+        ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+        ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+        ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+        ARM_TENANT_ID: $(ARM_TENANT_ID)
+
+    - script: terraform destroy -auto-approve -var "admin_password=$(admin_password)"
+      displayName: 'Terraform Destroy'
+      workingDirectory: terraform-directory
+      env:
+        ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+        ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+        ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+        ARM_TENANT_ID: $(ARM_TENANT_ID)
