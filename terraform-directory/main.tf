@@ -17,36 +17,18 @@ provider "azurerm" {
 
 # Define the root management group under the tenant
 resource "azurerm_management_group" "ims_root" {
-  name      = "IMSRoot"
-  display_name = "IMS Root"
-  parent_management_group_id = "Tenant Root Group" # This is implicitly the tenant root
+  name      = var.parent_management_group_name
+  display_name = var.parent_management_group_name
+  parent_management_group_id = var.root_management_group_id # This is implicitly the tenant root
 }
 
 # Tier 1 Groups
-resource "azurerm_management_group" "platform" {
-  name         = "Platform"
-  display_name = "Platform"
-  parent_management_group_id = azurerm_management_group.ims_root.id
+resource "azurerm_management_group" "tier 1" {
+  for_each = var.child_management_groups
+  display_name = each.value
+  name         = each.key
+  parent_management_group_id = azurerm_management_group.parent.id
 }
-
-resource "azurerm_management_group" "environments" {
-  name         = "Environments"
-  display_name = "Environments"
-  parent_management_group_id = azurerm_management_group.ims_root.id
-}
-
-resource "azurerm_management_group" "sandbox" {
-  name         = "Sandbox"
-  display_name = "Sandbox"
-  parent_management_group_id = azurerm_management_group.ims_root.id
-}
-
-resource "azurerm_management_group" "decommissioned" {
-  name         = "Decommissioned"
-  display_name = "Decommissioned"
-  parent_management_group_id = azurerm_management_group.ims_root.id
-}
-
 # Tier 2 under Platform
 resource "azurerm_management_group" "non_prod" {
   name         = "NonProd"
