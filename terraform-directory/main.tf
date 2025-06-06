@@ -23,7 +23,7 @@ resource "azurerm_management_group" "ims_root" {
 }
 
 # Tier 1 Groups
-resource "azurerm_management_group" "tier 1" {
+resource "azurerm_management_group" "tier1" {
   for_each = var.child_management_groups
   display_name = each.value
   name         = each.key
