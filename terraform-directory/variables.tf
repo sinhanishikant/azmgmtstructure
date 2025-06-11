@@ -7,7 +7,7 @@ variable "root_management_group_id" {
 variable "parent_management_group_name" {
   description = "Name of the parent management group under the root."
   type        = string
-  default     = "IMSRoot"
+  default     = "IMS-Root"
 }
 
 variable "child_management_groups" {
