@@ -3,8 +3,8 @@
  backend "azurerm" {
     resource_group_name  = "stateresourcegroup"
     storage_account_name = "practicetfstorage"
-    container_name       = "tfstate"
-    key                  = "terraform.tfstate"
+    container_name       = "tfstateoidc"
+    key                  = "terraform.tfstateoidc"
   }
  }
 # terraform {
