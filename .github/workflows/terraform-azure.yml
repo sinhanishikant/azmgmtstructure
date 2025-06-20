@@ -51,7 +51,9 @@ jobs:
           terraform init 
 
       - name: Terraform Plan
-        run: terraform plan -out=tfplan
+        run: |
+          cd modules/management-groups
+          terraform plan -out=tfplan
         
       - name: Terraform Apply
         if: ${{ success() }}
