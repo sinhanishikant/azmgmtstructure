@@ -15,7 +15,3 @@
 #    key                  = "${var.backend_key}" # Path to the state file in the container
  # }
 # }
-
-provider "azurerm" {
-  features {}
-}
