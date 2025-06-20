@@ -24,5 +24,5 @@ resource "azurerm_management_group" "ims-root" {
 
 # Example usage of the management group resource ID (path):
 output "management_group_id" {
-  value = azurerm_management_group.ims_root.id
+  value = azurerm_management_group.ims-root.id
 }
