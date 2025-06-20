@@ -17,8 +17,8 @@ terraform {
 
 # Define the root management group under the tenant
 resource "azurerm_management_group" "ims-root" {
-  name      = var.parent_management_group_name
-  display_name = var.parent_management_group_name
+  name      = "TescoIMSRootMG"
+  display_name = "IMS-ROOT"
   parent_management_group_id = var.root_management_group_id # This is implicitly the tenant root
 }
 
