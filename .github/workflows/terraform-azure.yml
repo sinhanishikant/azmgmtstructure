@@ -1,16 +1,36 @@
-name: 'Terraform on Azure'
+name: 'Terraform Management Groups'
 
 on:
   workflow_dispatch:
+    inputs:
+      stageToRun:
+        description: 'Select Stage to Run'
+        required: true
+        default: 'DeployModules'
+        type: choice
+        options:
+          - DeployModules
+          - DestroyModules
+      jobToRun:
+        description: 'Select Module to Deploy'
+        required: true
+        default: 'DeployManagementGroups'
+        type: choice
+        options:
+          - DeployManagementGroups
+          - DestroyManagementGroups
+
+env:
+  terraformVersion: '1.5.7'
 
 permissions:
   id-token: write
   contents: read
 
 jobs:
-  terraform:
+  deploy-managementgroups:
+    if: ${{ github.event.inputs.stageToRun == 'DeployModules' && github.event.inputs.jobToRun == 'DeployManagementGroups' }}
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -26,7 +46,9 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
-        run: terraform init
+        run: |
+          cd modules/managementgroups
+          terraform init 
 
       - name: Terraform Plan
         run: terraform plan
