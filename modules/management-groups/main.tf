@@ -11,9 +11,9 @@ terraform {
     }
   }
 }
-provider "azurerm" {
-  features {}
-}
+# provider "azurerm" {
+#  features {}
+# }
 
 # Define the root management group under the tenant
 resource "azurerm_management_group" "ims_root" {
