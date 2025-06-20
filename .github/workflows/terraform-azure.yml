@@ -45,9 +45,9 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         
-      - name: Remove local tfstate files
-        run: |
-          rm -f terraform.tfstate terraform.tfstate.backup
+     # - name: Remove local tfstate files
+     #   run: |
+     #     rm -f terraform.tfstate terraform.tfstate.backup
           
       - name: Terraform Init
         run: |
