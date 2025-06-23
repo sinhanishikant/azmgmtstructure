@@ -41,6 +41,7 @@ resource "azurerm_virtual_network" "hubvnet" {
   address_space       = ["192.168.0.0/22"]
   location            = azurerm_resource_group.hub-rg.location
   resource_group_name = azurerm_resource_group.hub-rg.name
+  provider = azurerm.hubsubscription
 }
 
 # Hub Subnet
@@ -49,6 +50,7 @@ resource "azurerm_subnet" "hub_subnet" {
   resource_group_name  = azurerm_resource_group.hub-rg.name
   virtual_network_name = azurerm_virtual_network.hubvnet.name
   address_prefixes     = ["192.168.0.0/26"]
+  provider = azurerm.hubsubscription
 }
 
 # provider "azurerm" {
@@ -69,6 +71,7 @@ resource "azurerm_virtual_network" "spoke1vnet" {
   address_space       = ["192.168.4.0/22"]
   location            = azurerm_resource_group.spoke1-rg.location
   resource_group_name = azurerm_resource_group.spoke1-rg.name
+  provider = azurerm.spoke1subscription
 }
 
 # Spoke 1 Subnet
@@ -77,6 +80,7 @@ resource "azurerm_subnet" "spoke1_subnet" {
   resource_group_name  = azurerm_resource_group.spoke1-rg.name
   virtual_network_name = azurerm_virtual_network.spoke1vnet.name
   address_prefixes     = ["192.168.4.0/26"]
+  provider = azurerm.spoke1subscription
 }
 
 # VNet Peering: Hub <-> Spoke1
