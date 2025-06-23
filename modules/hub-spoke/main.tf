@@ -38,6 +38,11 @@ resource "azurerm_subnet" "hub_subnet" {
   address_prefixes     = ["192.168.0.0/26"]
 }
 
+provider "azurerm" {
+features {}
+subscription_id = "87af1fd0-dc71-46af-8bab-3a6eb244c153"
+}
+
 # Spoke 1 Resource Group Definition
 resource "azurerm_resource_group" "spoke1-rg" {
   name     = "ims-prod-management-neu-rg-network"
@@ -59,22 +64,6 @@ resource "azurerm_subnet" "spoke1_subnet" {
   virtual_network_name = azurerm_virtual_network.spoke1vnet.name
   address_prefixes     = ["192.168.4.0/26"]
 }
-
-# Spoke 2 VNet
-# resource "azurerm_virtual_network" "spoke2" {
-#  name                = "spoke2-vnet"
-#  address_space       = ["10.2.0.0/16"]
-#  location            = azurerm_resource_group.network_rg.location
-#  resource_group_name = azurerm_resource_group.network_rg.name
-# }
-
-# Spoke 2 Subnet
-# resource "azurerm_subnet" "spoke2_subnet" {
-#  name                 = "spoke2-subnet"
-#  resource_group_name  = azurerm_resource_group.network_rg.name
-#  virtual_network_name = azurerm_virtual_network.spoke2.name
-#  address_prefixes     = ["10.2.1.0/24"]
-# }
 
 # VNet Peering: Hub <-> Spoke1
 resource "azurerm_virtual_network_peering" "hub_to_spoke1" {
@@ -98,6 +87,22 @@ resource "azurerm_virtual_network_peering" "hub_to_spoke1" {
   use_remote_gateways          = false
   allow_virtual_network_access = true
  }
+
+# Spoke 2 VNet
+# resource "azurerm_virtual_network" "spoke2" {
+#  name                = "spoke2-vnet"
+#  address_space       = ["10.2.0.0/16"]
+#  location            = azurerm_resource_group.network_rg.location
+#  resource_group_name = azurerm_resource_group.network_rg.name
+# }
+
+# Spoke 2 Subnet
+# resource "azurerm_subnet" "spoke2_subnet" {
+#  name                 = "spoke2-subnet"
+#  resource_group_name  = azurerm_resource_group.network_rg.name
+#  virtual_network_name = azurerm_virtual_network.spoke2.name
+#  address_prefixes     = ["10.2.1.0/24"]
+# }
 
 # VNet Peering: Hub <-> Spoke2
 # resource "azurerm_virtual_network_peering" "hub_to_spoke2" {
