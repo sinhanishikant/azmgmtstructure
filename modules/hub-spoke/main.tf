@@ -89,7 +89,7 @@ resource "azurerm_virtual_network_peering" "hub_to_spoke1" {
 }
 
  resource "azurerm_virtual_network_peering" "spoke1_to_hub" {
-  name                      = "ims-prod-connectivity-neu-peer-management-01"
+  name                      = "ims-prod-connectivity-neu-peer-management-02"
   resource_group_name       = azurerm_resource_group.spoke1-rg.name
   virtual_network_name      = azurerm_virtual_network.spoke1vnet.name
   remote_virtual_network_id = azurerm_virtual_network.hubvnet.id
