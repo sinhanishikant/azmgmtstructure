@@ -153,6 +153,10 @@ jobs:
           cd modules/hub-spoke
           terraform init
           
+      - name: Terraform List
+        run: |
+          terraform state list
+        
       - name: Terraform Destroy
         run: |
           cd modules/hub-spoke
