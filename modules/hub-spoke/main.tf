@@ -15,7 +15,7 @@ terraform {
 #  features {}
 # }
 
-# Resource Group
+# Resource Group Definition
 resource "azurerm_resource_group" "network_rg" {
   name     = "hub-spoke-rg"
   location = "East US"
