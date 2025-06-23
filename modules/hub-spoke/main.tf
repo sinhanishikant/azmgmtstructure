@@ -15,60 +15,89 @@ terraform {
 #  features {}
 # }
 
-# Define the root management group under the tenant
-resource "azurerm_management_group" "ims-root" {
-  name      = "TescoIMSRootMG"
-  display_name = "IMS-ROOT"
-  parent_management_group_id = var.root_management_group_id # This is implicitly the tenant root
+# Resource Group
+resource "azurerm_resource_group" "network_rg" {
+  name     = "hub-spoke-rg"
+  location = "East US"
 }
 
-# Example usage of the management group resource ID (path):
-output "management_group_id" {
-  value = azurerm_management_group.ims-root.id
-}
-# Create tier 1 management groups
-resource "azurerm_management_group" "platform" {
-  name        = "platform"
-  display_name = "platform"
-  parent_management_group_id = azurerm_management_group.ims-root.id
+# Hub VNet
+resource "azurerm_virtual_network" "hub" {
+  name                = "hub-vnet"
+  address_space       = ["10.0.0.0/16"]
+  location            = azurerm_resource_group.network_rg.location
+  resource_group_name = azurerm_resource_group.network_rg.name
 }
 
-resource "azurerm_management_group" "environments" {
-  name        = "environments"
-  display_name = "environments"
-  parent_management_group_id = azurerm_management_group.ims-root.id
-}
-resource "azurerm_management_group" "sandbox" {
-  name        = "ims-sandbox"
-  display_name = "ims-sandbox"
-  parent_management_group_id = azurerm_management_group.ims-root.id
-}
-resource "azurerm_management_group" "decommissioned" {
-  name        = "ims-decommissioned"
-  display_name = "ims-decommissioned"
-  parent_management_group_id = azurerm_management_group.ims-root.id
-}
-# Create tier 2 Management Groups
-resource "azurerm_management_group" "Development" {
-  name        = "ims-environments-development"
-  display_name = "ims-environments-development"
-  parent_management_group_id = azurerm_management_group.environments.id
+# Hub Subnet
+resource "azurerm_subnet" "hub_subnet" {
+  name                 = "hub-subnet"
+  resource_group_name  = azurerm_resource_group.network_rg.name
+  virtual_network_name = azurerm_virtual_network.hub.name
+  address_prefixes     = ["10.0.1.0/24"]
 }
 
-resource "azurerm_management_group" "envproduction" {
-  name        = "ims-environments-production"
-  display_name = "ims-environments-production"
-  parent_management_group_id = azurerm_management_group.environments.id
+# Spoke 1 VNet
+resource "azurerm_virtual_network" "spoke1" {
+  name                = "spoke1-vnet"
+  address_space       = ["10.1.0.0/16"]
+  location            = azurerm_resource_group.network_rg.location
+  resource_group_name = azurerm_resource_group.network_rg.name
 }
 
-resource "azurerm_management_group" "non_prod" {
-  name        = "ims-platform-nonprod"
-  display_name = "ims-platform-nonprod"
-  parent_management_group_id = azurerm_management_group.platform.id
+# Spoke 1 Subnet
+resource "azurerm_subnet" "spoke1_subnet" {
+  name                 = "spoke1-subnet"
+  resource_group_name  = azurerm_resource_group.network_rg.name
+  virtual_network_name = azurerm_virtual_network.spoke1.name
+  address_prefixes     = ["10.1.1.0/24"]
+}
+# Spoke 2 VNet
+resource "azurerm_virtual_network" "spoke2" {
+  name                = "spoke2-vnet"
+  address_space       = ["10.2.0.0/16"]
+  location            = azurerm_resource_group.network_rg.location
+  resource_group_name = azurerm_resource_group.network_rg.name
 }
 
-resource "azurerm_management_group" "production" {
-  name        = "ims-platform-prod"
-  display_name = "ims-platform-production"
-  parent_management_group_id = azurerm_management_group.platform.id
+# Spoke 2 Subnet
+resource "azurerm_subnet" "spoke2_subnet" {
+  name                 = "spoke2-subnet"
+  resource_group_name  = azurerm_resource_group.network_rg.name
+  virtual_network_name = azurerm_virtual_network.spoke2.name
+  address_prefixes     = ["10.2.1.0/24"]
+}
+
+# VNet Peering: Hub <-> Spoke1
+resource "azurerm_virtual_network_peering" "hub_to_spoke1" {
+  name                      = "hub-to-spoke1"
+  resource_group_name       = azurerm_resource_group.network_rg.name
+  virtual_network_name      = azurerm_virtual_network.hub.name
+  remote_virtual_network_id = azurerm_virtual_network.spoke1.id
+  allow_virtual_network_access = true
+}
+
+resource "azurerm_virtual_network_peering" "spoke1_to_hub" {
+  name                      = "spoke1-to-hub"
+  resource_group_name       = azurerm_resource_group.network_rg.name
+  virtual_network_name      = azurerm_virtual_network.spoke1.name
+  remote_virtual_network_id = azurerm_virtual_network.hub.id
+  allow_virtual_network_access = true
+}
+
+# VNet Peering: Hub <-> Spoke2
+resource "azurerm_virtual_network_peering" "hub_to_spoke2" {
+  name                      = "hub-to-spoke2"
+  resource_group_name       = azurerm_resource_group.network_rg.name
+  virtual_network_name      = azurerm_virtual_network.hub.name
+  remote_virtual_network_id = azurerm_virtual_network.spoke2.id
+  allow_virtual_network_access = true
+}
+
+resource "azurerm_virtual_network_peering" "spoke2_to_hub" {
+  name                      = "spoke2-to-hub"
+  resource_group_name       = azurerm_resource_group.network_rg.name
+  virtual_network_name      = azurerm_virtual_network.spoke2.name
+  remote_virtual_network_id = azurerm_virtual_network.hub.id
+  allow_virtual_network_access = true
 }
