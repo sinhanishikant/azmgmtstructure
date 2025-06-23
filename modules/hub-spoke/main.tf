@@ -13,14 +13,14 @@ terraform {
 }
 provider "azurerm" {
   alias           = "hubsubscription"
-  features        = {}
   subscription_id = "22e6a9c0-f644-43c2-aac9-b756e44d2068"
+  features {}
 }
 
 provider "azurerm" {
   alias           = "spoke1subscription"
-  features        = {}
   subscription_id = "87af1fd0-dc71-46af-8bab-3a6eb244c153"
+  features {}
 }
 
 # provider "azurerm" {
