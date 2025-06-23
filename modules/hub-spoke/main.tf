@@ -77,6 +77,7 @@ resource "azurerm_virtual_network_peering" "hub_to_spoke1" {
   allow_virtual_network_access = true
 }
 
+# VNet Peering: Spoke1 <-> Hub
  resource "azurerm_virtual_network_peering" "spoke1_to_hub" {
   name                      = "ims-prod-connectivity-neu-peer-management-02"
   resource_group_name       = azurerm_resource_group.spoke1-rg.name
