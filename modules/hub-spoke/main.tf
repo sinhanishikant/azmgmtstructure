@@ -79,19 +79,25 @@ resource "azurerm_subnet" "spoke1_subnet" {
 # VNet Peering: Hub <-> Spoke1
 resource "azurerm_virtual_network_peering" "hub_to_spoke1" {
   name                      = "ims-prod-connectivity-neu-peer-management-01"
-  resource_group_name       = azurerm_resource_group.network_rg.name
-  virtual_network_name      = azurerm_virtual_network.hub.name
-  remote_virtual_network_id = azurerm_virtual_network.spoke1.id
+  resource_group_name       = azurerm_resource_group.hub-rg.name
+  virtual_network_name      = azurerm_virtual_network.hubvnet.name
+  remote_virtual_network_id = azurerm_virtual_network.spoke1vnet.id
+  allow_forwarded_traffic      = true
+  allow_gateway_transit        = false
+  use_remote_gateways          = false
   allow_virtual_network_access = true
 }
 
-# resource "azurerm_virtual_network_peering" "spoke1_to_hub" {
-#  name                      = "spoke1-to-hub"
-#  resource_group_name       = azurerm_resource_group.network_rg.name
-#  virtual_network_name      = azurerm_virtual_network.spoke1.name
-#  remote_virtual_network_id = azurerm_virtual_network.hub.id
-#  allow_virtual_network_access = true
-# }
+ resource "azurerm_virtual_network_peering" "spoke1_to_hub" {
+  name                      = "ims-prod-connectivity-neu-peer-management-01"
+  resource_group_name       = azurerm_resource_group.spoke1-rg.name
+  virtual_network_name      = azurerm_virtual_network.spoke1vnet.name
+  remote_virtual_network_id = azurerm_virtual_network.hubvnet.id
+  allow_forwarded_traffic      = true
+  allow_gateway_transit        = false
+  use_remote_gateways          = false
+  allow_virtual_network_access = true
+ }
 
 # VNet Peering: Hub <-> Spoke2
 # resource "azurerm_virtual_network_peering" "hub_to_spoke2" {
