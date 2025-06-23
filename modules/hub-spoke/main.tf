@@ -93,6 +93,7 @@ resource "azurerm_virtual_network_peering" "hub_to_spoke1" {
   allow_gateway_transit        = false
   use_remote_gateways          = false
   allow_virtual_network_access = true
+  azurerm.hubsubscription
 }
 
 # VNet Peering: Spoke1 <-> Hub
@@ -105,6 +106,7 @@ resource "azurerm_virtual_network_peering" "hub_to_spoke1" {
   allow_gateway_transit        = false
   use_remote_gateways          = false
   allow_virtual_network_access = true
+  provider = azurerm.spoke1subscription
  }
 
 # Spoke 2 VNet
