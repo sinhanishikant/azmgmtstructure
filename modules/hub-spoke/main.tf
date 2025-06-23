@@ -16,8 +16,8 @@ terraform {
 # }
 
 # Resource Group Definition
-resource "azurerm_resource_group" "network_rg" {
-  name     = "hub-spoke-rg"
+resource "azurerm_resource_group" "hub-rg" {
+  name     = "ims-prod-connectivity-neu-rg-network"
   location = "East US"
 }
 
