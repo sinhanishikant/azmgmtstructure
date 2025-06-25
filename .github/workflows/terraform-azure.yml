@@ -1,10 +1,10 @@
-name: 'Terraform Management Groups'
+name: 'Hub and Spoke'
 
 on:
   workflow_dispatch:
     inputs:
       jobToRun:
-        description: 'Select Module to Deploy'
+        description: 'Select Job'
         required: true
         default: 'DeployHubSpoke'
         type: choice
@@ -36,20 +36,16 @@ jobs:
           
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
-        
-     # - name: Remove local tfstate files
-     #   run: |
-     #     rm -f terraform.tfstate terraform.tfstate.backup
           
       - name: Terraform Init
         run: |
           cd modules/hub-spoke
           terraform init 
 
-     # - name: Terraform Plan
-     #   run: |
-     #     cd modules/management-groups
-     #     terraform plan -out=tfplan
+      - name: Terraform Plan
+        run: |
+          cd modules/management-groups
+          terraform plan -out=tfplan
         
       - name: Terraform Apply
         if: ${{ success() }}
